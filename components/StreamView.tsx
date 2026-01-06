@@ -30,8 +30,8 @@ const StreamView: React.FC<StreamViewProps> = ({ editorType, onBack }) => {
     };
 
     return (
-        <div className="flex h-full">
-            <div className="flex-1 flex flex-col min-w-0 animate-fade-in">
+        <div className="flex h-full w-full">
+            <div className="flex-1 flex flex-col min-w-0 min-h-0 animate-fade-in">
                 {renderEditor(editorType)}
             </div>
         </div>

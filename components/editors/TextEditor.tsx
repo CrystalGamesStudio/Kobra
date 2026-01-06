@@ -1,17 +1,33 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { useSettings } from '../../contexts/SettingsContext';
 
+// --- Icons ---
+// Back Arrow Icon - arrow-left-sm-svgrepo-com.svg
+const BackArrowIcon = () => (
+    <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17 12H7M7 12L11 16M7 12L11 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+
+// Text Editor Icon - Edit 03 SVG Icon.svg
+const TextEditorIcon = () => (
+    <svg className="h-5 w-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 20.0002H21M3 20.0002H4.67454C5.16372 20.0002 5.40832 20.0002 5.63849 19.945C5.84256 19.896 6.03765 19.8152 6.2166 19.7055C6.41843 19.5818 6.59138 19.4089 6.93729 19.063L19.5 6.50023C20.3285 5.6718 20.3285 4.32865 19.5 3.50023C18.6716 2.6718 17.3285 2.6718 16.5 3.50023L3.93726 16.063C3.59136 16.4089 3.4184 16.5818 3.29472 16.7837C3.18506 16.9626 3.10425 17.1577 3.05526 17.3618C3 17.5919 3 17.8365 3 18.3257V20.0002Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+
 // --- Toolbar Icons ---
-const BoldIcon = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z" /><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z" /></svg>;
-const ItalicIcon = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="19" x2="10" y1="4" y2="4" /><line x1="14" x2="5" y1="20" y2="20" /><line x1="15" x2="9" y1="4" y2="20" /></svg>;
-const UnderlineIcon = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M6 3v7a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3" /><line x1="4" x2="20" y1="21" y2="21" /></svg>;
-const UndoIcon = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M3 7v6h6" /><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" /></svg>;
-const RedoIcon = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M21 7v6h-6" /><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7" /></svg>;
-const ListBulletIcon = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="8" x2="21" y1="6" y2="6" /><line x1="8" x2="21" y1="12" y2="12" /><line x1="8" x2="21" y1="18" y2="18" /><line x1="3" x2="3.01" y1="6" y2="6" /><line x1="3" x2="3.01" y1="12" y2="12" /><line x1="3" x2="3.01" y1="18" y2="18" /></svg>;
-const ListNumberIcon = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><line x1="10" x2="21" y1="6" y2="6" /><line x1="10" x2="21" y1="12" y2="12" /><line x1="10" x2="21" y1="18" y2="18" /><path d="M4 6h1v4" /><path d="M4 10h2" /><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1" /></svg>;
-const TableIcon = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><line x1="3" x2="21" y1="9" y2="9" /><line x1="3" x2="21" y1="15" y2="15" /><line x1="9" x2="9" y1="3" y2="21" /><line x1="15" x2="15" y1="3" y2="21" /></svg>;
-const AttachmentIcon = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" /></svg>;
-const FontSizeIcon = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M4 20h4l10-10-4-4L4 16v4" /><path d="m14.5 5.5 4 4" /></svg>;
+const BoldIcon = () => <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5"><path d="M6 4V20M9.5 4H15.5C17.7091 4 19.5 5.79086 19.5 8C19.5 10.2091 17.7091 12 15.5 12H9.5H16.5C18.7091 12 20.5 13.7909 20.5 16C20.5 18.2091 18.7091 20 16.5 20H9.5M9.5 4V20M9.5 4H4M9.5 20H4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+const ItalicIcon = () => <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5"><path d="M3,21a1,1,0,0,1,1-1H7.35L14.461,4H12a1,1,0,0,1,0-2h8a1,1,0,0,1,0,2H16.65L9.539,20H12a1,1,0,0,1,0,2H4A1,1,0,0,1,3,21Z"/></svg>;
+const UnderlineIcon = () => <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5"><path d="M6 19H18M8 5V11C8 13.2091 9.79086 15 12 15C14.2091 15 16 13.2091 16 11V5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+const UndoIcon = () => <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5"><path d="M7 13L3 9M3 9L7 5M3 9H16C18.7614 9 21 11.2386 21 14C21 16.7614 18.7614 19 16 19H11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+const RedoIcon = () => <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5"><path d="M17 11L21 15M21 15L17 19M21 15H8C5.23858 15 3 12.7614 3 10C3 7.23858 5.23858 5 8 5H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+const ListBulletIcon = () => <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5"><path d="M8 6.00067L21 6.00139M8 12.0007L21 12.0015M8 18.0007L21 18.0015M3.5 6H3.51M3.5 12H3.51M3.5 18H3.51M4 6C4 6.27614 3.77614 6.5 3.5 6.5C3.22386 6.5 3 6.27614 3 6C3 5.72386 3.22386 5.5 3.5 5.5C3.77614 5.5 4 5.72386 4 6ZM4 12C4 12.2761 3.77614 12.5 3.5 12.5C3.22386 12.5 3 12.2761 3 12C3 11.7239 3.22386 11.5 3.5 11.5C3.77614 11.5 4 11.7239 4 12ZM4 18C4 18.2761 3.77614 18.5 3.5 18.5C3.22386 18.5 3 18.2761 3 18C3 17.7239 3.22386 17.5 3.5 17.5C3.77614 17.5 4 17.7239 4 18Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+const ListNumberIcon = () => <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5"><path d="M10 17H20M4 15.6853V15.5C4 14.6716 4.67157 14 5.5 14H5.54054C6.34658 14 7.00021 14.6534 7.00021 15.4595C7.00021 15.8103 6.8862 16.1519 6.67568 16.4326L4 20.0002L7 20M10 12H20M10 7H20M4 5L6 4V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+const ChecklistIcon = () => <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5"><path d="M11 17H20M8 15L5.5 18L4 17M11 12H20M8 10L5.5 13L4 12M11 7H20M8 5L5.5 8L4 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+const TableIcon = () => <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5"><path d="M4 9.5H20M4 14.5H20M9 4.5V19.5M7.2 19.5H16.8C17.9201 19.5 18.4802 19.5 18.908 19.282C19.2843 19.0903 19.5903 18.7843 19.782 18.408C20 17.9802 20 17.4201 20 16.3V7.7C20 6.5799 20 6.01984 19.782 5.59202C19.5903 5.21569 19.2843 4.90973 18.908 4.71799C18.4802 4.5 17.9201 4.5 16.8 4.5H7.2C6.0799 4.5 5.51984 4.5 5.09202 4.71799C4.71569 4.90973 4.40973 5.21569 4.21799 5.59202C4 6.01984 4 6.57989 4 7.7V16.3C4 17.4201 4 17.9802 4.21799 18.408C4.40973 18.7843 4.71569 19.0903 5.09202 19.282C5.51984 19.5 6.07989 19.5 7.2 19.5Z" stroke="currentColor" strokeWidth="2"/></svg>;
+const AttachmentIcon = () => <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5"><path d="M14,18H9a6,6,0,0,1-6-6H3A6,6,0,0,1,9,6h8a4,4,0,0,1,4,4h0a4,4,0,0,1-4,4H9a2,2,0,0,1-2-2H7a2,2,0,0,1,2-2h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+const FontSizeIcon = () => <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5"><path d="M2,21H6a1,1,0,0,0,0-2H5.376l1.951-6h5.346l1.95,6H14a1,1,0,0,0,0,2h4a1,1,0,0,0,0-2H16.727L11.751,3.69A1,1,0,0,0,10.8,3H9.2a1,1,0,0,0-.951.69L3.273,19H2a1,1,0,0,0,0,2ZM9.927,5h.146l1.95,6H7.977ZM23,16a1,1,0,0,1-1,1H19a1,1,0,0,1,0-2h.365l-.586-1.692H17a1,1,0,0,1,0-2h1.087L17.288,9h-.576l-.113.327a1,1,0,0,1-1.891-.654l.346-1A1,1,0,0,1,16,7h2a1,1,0,0,1,.945.673L21.481,15H22A1,1,0,0,1,23,16Z"/></svg>;
 
 
 const ToolbarButton: React.FC<{ onClick: (e: React.MouseEvent) => void, isActive: boolean, children: React.ReactNode, buttonRef?: React.Ref<HTMLButtonElement>, title: string }> = ({ onClick, isActive, children, buttonRef, title }) => (
@@ -54,6 +70,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ onBack }) => {
     const [isUnderline, setIsUnderline] = useState(false);
     const [isUL, setIsUL] = useState(false);
     const [isOL, setIsOL] = useState(false);
+    const [isChecklist, setIsChecklist] = useState(false);
     const [textColor, setTextColor] = useState(theme === 'dark' ? '#e2e8f0' : '#1a202c');
     const [fontSize, setFontSize] = useState(16);
     const [fontSizeInput, setFontSizeInput] = useState<string>('16');
@@ -187,6 +204,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ onBack }) => {
         editorRef.current?.focus();
     };
 
+
     const handleFontSizeButtonClick = (e: React.MouseEvent) => {
         e.preventDefault();
         if (!isFontSizePopoverOpen) {
@@ -198,7 +216,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ onBack }) => {
     const handleApplyFontSize = (e: React.MouseEvent) => {
         e.preventDefault();
         const size = parseInt(fontSizeInput, 10);
-        if (!size || size <= 0) return;
+        if (!size || size <= 0 || size > 1000) return; // Allow up to 1000px
         
         setIsFontSizePopoverOpen(false);
     
@@ -278,7 +296,39 @@ const TextEditor: React.FC<TextEditorProps> = ({ onBack }) => {
         }
         
         setFontSize(finalSize);
+        
+        // Check if we're in a checklist (check for checkbox elements)
+        currentEl = parent as HTMLElement;
+        let inChecklist = false;
+        while (currentEl && editorRef.current.contains(currentEl)) {
+            if (currentEl.tagName === 'UL' || currentEl.tagName === 'LI') {
+                const hasCheckbox = currentEl.querySelector('input[type="checkbox"]') !== null;
+                if (hasCheckbox) {
+                    inChecklist = true;
+                    break;
+                }
+            }
+            if (currentEl === editorRef.current) break;
+            currentEl = currentEl.parentElement;
+        }
+        setIsChecklist(inChecklist);
     }, [theme]);
+
+    const handleInsertChecklist = useCallback((e: React.MouseEvent) => {
+        e.preventDefault();
+        const checklistHTML = `
+            <ul style="list-style: none; padding-left: 0;">
+                <li style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                    <input type="checkbox" style="margin-right: 0.5rem; cursor: pointer;" />
+                    <span contenteditable="true">Checklist item</span>
+                </li>
+            </ul>
+            <p><br></p>
+        `;
+        document.execCommand('insertHTML', false, checklistHTML);
+        editorRef.current?.focus();
+        updateToolbarState();
+    }, [updateToolbarState]);
 
     useEffect(() => {
         const handleSelectionChange = () => {
@@ -293,14 +343,17 @@ const TextEditor: React.FC<TextEditorProps> = ({ onBack }) => {
     return (
         <div className="bg-[var(--panel-bg)] border border-[var(--border-color)] h-full flex flex-col overflow-hidden rounded-xl">
             <div className="flex-shrink-0 bg-[var(--bg-color)] p-3 flex items-center space-x-1 flex-wrap border-b border-[var(--border-color)]">
-                 <div className="flex items-center px-2 text-[var(--text-color)]">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M14 2v6h6" />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M16 13H8" />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M16 17H8" />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 9H8" />
-                    </svg>
+                {onBack && (
+                    <button
+                        onClick={onBack}
+                        className="p-2 rounded-lg transition-colors text-[var(--text-color-light)] hover:bg-[var(--border-color)] active:scale-95"
+                        title="Back to home"
+                    >
+                        <BackArrowIcon />
+                    </button>
+                )}
+                <div className="flex items-center px-2 text-[var(--text-color)]">
+                    <TextEditorIcon />
                     <h3 className="font-bold text-sm">{t.text_editor_title}</h3>
                 </div>
                 
@@ -330,6 +383,9 @@ const TextEditor: React.FC<TextEditorProps> = ({ onBack }) => {
                                     value={fontSizeInput}
                                     onChange={(e) => setFontSizeInput(e.target.value)}
                                     className="w-full bg-[var(--input-bg)] border border-[var(--border-color)] rounded-md p-1 text-center"
+                                    min="1"
+                                    max="1000"
+                                    step="1"
                                 />
                                 <button
                                     onClick={handleApplyFontSize}
@@ -346,6 +402,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ onBack }) => {
 
                 <ToolbarButton onClick={(e) => applyCommand(e, 'insertUnorderedList')} isActive={isUL} title={t.text_editor_bullet_list}><ListBulletIcon /></ToolbarButton>
                 <ToolbarButton onClick={(e) => applyCommand(e, 'insertOrderedList')} isActive={isOL} title={t.text_editor_numbered_list}><ListNumberIcon /></ToolbarButton>
+                <ToolbarButton onClick={handleInsertChecklist} isActive={isChecklist} title="Checklist"><ChecklistIcon /></ToolbarButton>
 
                 <div className="w-px h-7 bg-[var(--border-color)] mx-2"></div>
 

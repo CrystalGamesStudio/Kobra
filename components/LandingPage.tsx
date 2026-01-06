@@ -33,40 +33,6 @@ const Section: React.FC<{title: string, subtitle: string, children: React.ReactN
     </div>
 );
 
-const WhatsNewItem: React.FC<{
-    date: string;
-    title: string;
-    description: string;
-    tag: string;
-    tagColor: string;
-    locale: string;
-}> = ({ date, title, description, tag, tagColor, locale }) => {
-    const formattedDate = new Date(date).toLocaleDateString(locale, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-
-    return (
-        <div className="flex flex-col sm:flex-row gap-6 sm:gap-8">
-            <div className="flex-shrink-0 text-sm text-gray-400 font-medium w-full sm:w-36 text-left sm:text-right">{formattedDate}</div>
-            <div className="relative pl-8 sm:pl-0">
-                 <div className="absolute left-0 sm:-left-4 h-full w-px bg-gray-700">
-                    <div className="absolute -left-2 top-0 h-4 w-4 rounded-full bg-gray-700 border-2 border-gray-900"></div>
-                </div>
-                <div>
-                    <span className={`inline-block text-xs font-semibold px-2 py-1 rounded-full mb-2 ${tagColor}`}>
-                        {tag}
-                    </span>
-                    <h4 className="font-bold text-white text-lg mb-1">{title}</h4>
-                    <p className="text-gray-400">{description}</p>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-
 const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin }) => {
     const { t, language } = useSettings();
 
@@ -78,14 +44,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin }) => {
             alert('Guest sign-in failed. Please try again.');
         }
     };
-
-    const changelogItems = [
-        { id: 1, tagKey: 'whats_new_1_tag_key', color: 'bg-blue-500/20 text-blue-300' },
-        { id: 2, tagKey: 'whats_new_2_tag_key', color: 'bg-purple-500/20 text-purple-300' },
-        { id: 3, tagKey: 'whats_new_3_tag_key', color: 'bg-blue-500/20 text-blue-300' },
-        { id: 4, tagKey: 'whats_new_4_tag_key', color: 'bg-green-500/20 text-green-300' },
-    ];
-
 
     return (
         <div className="bg-gray-900 text-white min-h-screen">
@@ -192,26 +150,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin }) => {
                     </div>
                 </Section>
 
-                <Section title={t.landing_whats_new_title} subtitle={t.landing_whats_new_subtitle} className="bg-gray-800/50">
-                    <div className="max-w-3xl mx-auto space-y-12">
-                        {changelogItems.map((item) => (
-                             <WhatsNewItem
-                                key={item.id}
-                                date={t[`whats_new_${item.id}_date` as keyof typeof t] as string}
-                                title={t[`whats_new_${item.id}_title` as keyof typeof t] as string}
-                                description={t[`whats_new_${item.id}_desc` as keyof typeof t] as string}
-                                tag={t[t[`whats_new_${item.id}_tag_key` as keyof typeof t] as keyof typeof t] as string}
-                                tagColor={item.color}
-                                locale={language}
-                            />
-                        ))}
-                    </div>
-                </Section>
-
             </main>
             
             <footer className="text-center py-8 text-gray-500">
-                <p>&copy; {new Date().getFullYear()} Kobra. {t.landing_footer_rights}</p>
+                <p>&copy; {new Date().getFullYear()} <a href="https://crystalgames.studio" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white underline">Crystal Games Studio</a>. {t.landing_footer_rights}</p>
             </footer>
         </div>
     );

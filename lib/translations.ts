@@ -196,7 +196,7 @@ const en = {
   'auth/admin-restricted-operation': 'Guest sign-in is disabled. Please enable Anonymous sign-in in your Firebase console.',
 
   // Landing Page
-  landing_tagline: "The Future of Live Content Creation is Here",
+  landing_tagline: "Crystal Games Studio's",
   landing_title: "The All-in-One Studio for Creative Streamers",
   landing_subtitle: "Kobra is a revolutionary browser-based streaming studio that combines powerful editing tools with seamless live broadcasting. Create, code, and captivate your audience like never before.",
   landing_cta: "Get Started for Free",
