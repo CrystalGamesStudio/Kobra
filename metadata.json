@@ -1,0 +1,9 @@
+{
+  "name": "Kobra - Code. Stream. Strike.",
+  "description": "Kobra is a live streaming platform for creators: code, AI, music, text, graphics, 3D... all in one place. Code. Stream. Strike.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "prompt": ""
+}

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kobra - Code. Stream. Strike.</title>
+    <style>
+      :root, .light {
+        --bg-color: #f9fafb;
+        --panel-bg: #ffffff;
+        --text-color: #111827;
+        --text-color-light: #6b7280;
+        --accent-color: #38a169;
+        --accent-color-hover: #2f855a;
+        --border-color: #e5e7eb;
+        --input-bg: #f3f4f6;
+        --scroll-thumb: #d1d5db;
+        --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      }
+      .dark {
+        --bg-color: #08090a;
+        --panel-bg: #161b22;
+        --text-color: #e6edf3;
+        --text-color-light: #8b949e;
+        --accent-color: #48bb78;
+        --accent-color-hover: #38a169;
+        --border-color: #30363d;
+        --input-bg: #0d1117;
+        --scroll-thumb: #4b5563;
+        --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+      }
+
+      /* Base styles */
+      body, html {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar { width: 8px; height: 8px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
+      
+      ::selection { background-color: var(--accent-color); color: white; }
+      
+      @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+      .animate-fade-in-up { animation: fadeInUp 0.5s ease-out forwards; }
+      .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+      
+      /* Main Loader */
+      .loader {
+        width: 112px;
+        height: 112px;
+        position: relative;
+      }
+
+      .box1,
+      .box2,
+      .box3 {
+        border: 16px solid var(--accent-color);
+        box-sizing: border-box;
+        position: absolute;
+        display: block;
+      }
+
+      .box1 {
+        width: 112px;
+        height: 48px;
+        margin-top: 64px;
+        margin-left: 0px;
+        animation: abox1 4s 1s forwards ease-in-out infinite;
+      }
+
+      .box2 {
+        width: 48px;
+        height: 48px;
+        margin-top: 0px;
+        margin-left: 0px;
+        animation: abox2 4s 1s forwards ease-in-out infinite;
+      }
+
+      .box3 {
+        width: 48px;
+        height: 48px;
+        margin-top: 0px;
+        margin-left: 64px;
+        animation: abox3 4s 1s forwards ease-in-out infinite;
+      }
+
+      @keyframes abox1 {
+        0%    { width: 112px; height: 48px; margin-top: 64px; margin-left: 0px; }
+        12.5% { width: 48px;  height: 48px; margin-top: 64px; margin-left: 0px; }
+        25%   { width: 48px;  height: 48px; margin-top: 64px; margin-left: 0px; }
+        37.5% { width: 48px;  height: 48px; margin-top: 64px; margin-left: 0px; }
+        50%   { width: 48px;  height: 48px; margin-top: 64px; margin-left: 0px; }
+        62.5% { width: 48px;  height: 48px; margin-top: 64px; margin-left: 0px; }
+        75%   { width: 48px;  height: 112px; margin-top: 0px; margin-left: 0px; }
+        87.5% { width: 48px;  height: 48px; margin-top: 0px; margin-left: 0px; }
+        100%  { width: 48px;  height: 48px; margin-top: 0px; margin-left: 0px; }
+      }
+
+      @keyframes abox2 {
+        0%    { width: 48px;  height: 48px; margin-top: 0px; margin-left: 0px; }
+        12.5% { width: 48px;  height: 48px; margin-top: 0px; margin-left: 0px; }
+        25%   { width: 48px;  height: 48px; margin-top: 0px; margin-left: 0px; }
+        37.5% { width: 48px;  height: 48px; margin-top: 0px; margin-left: 0px; }
+        50%   { width: 112px; height: 48px; margin-top: 0px; margin-left: 0px; }
+        62.5% { width: 48px;  height: 48px; margin-top: 0px; margin-left: 64px; }
+        75%   { width: 48px;  height: 48px; margin-top: 0px; margin-left: 64px; }
+        87.5% { width: 48px;  height: 48px; margin-top: 0px; margin-left: 64px; }
+        100%  { width: 48px;  height: 48px; margin-top: 0px; margin-left: 64px; }
+      }
+
+      @keyframes abox3 {
+        0%    { width: 48px;  height: 48px; margin-top: 0px;  margin-left: 64px; }
+        12.5% { width: 48px;  height: 48px; margin-top: 0px;  margin-left: 64px; }
+        25%   { width: 48px;  height: 112px;margin-top: 0px;  margin-left: 64px; }
+        37.5% { width: 48px;  height: 48px; margin-top: 64px; margin-left: 64px; }
+        50%   { width: 48px;  height: 48px; margin-top: 64px; margin-left: 64px; }
+        62.5% { width: 48px;  height: 48px; margin-top: 64px; margin-left: 64px; }
+        75%   { width: 48px;  height: 48px; margin-top: 64px; margin-left: 64px; }
+        87.5% { width: 48px;  height: 48px; margin-top: 64px; margin-left: 64px; }
+        100%  { width: 112px; height: 48px; margin-top: 64px; margin-left: 0px; }
+      }
+      
+      /* Global Processing Overlay */
+      .processing-overlay {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0,0,0,0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+      }
+      
+      /* Scaled down loader for chat */
+      .chat-loader {
+        transform: scale(0.35);
+      }
+
+      /* Inline Loader for buttons/chat */
+      .inline-loader {
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--text-color-light);
+        border-bottom-color: var(--accent-color);
+        border-radius: 50%;
+        display: inline-block;
+        box-sizing: border-box;
+        animation: rotation 1s linear infinite;
+      }
+      @keyframes rotation {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+    </style>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.11.0",
+    "firebase/": "https://esm.sh/firebase@^12.0.0/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="font-sans">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
