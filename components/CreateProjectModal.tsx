@@ -27,7 +27,7 @@ const EditorCard: React.FC<{
     comingSoonText: string;
 }> = ({ type, name, icon, description, enabled, isSelected, onSelect, comingSoonText }) => {
     
-    const baseClasses = "p-6 rounded-xl flex flex-col items-center text-center transition-all duration-200 text-[var(--text-color)] border";
+    const baseClasses = "p-4 sm:p-5 md:p-6 rounded-xl flex flex-col items-center text-center transition-all duration-200 text-[var(--text-color)] border";
     const enabledClasses = "cursor-pointer bg-[var(--panel-bg)] border-[var(--border-color)] hover:border-[var(--accent-color)] hover:shadow-md";
     const disabledClasses = "opacity-50 cursor-not-allowed bg-[var(--bg-color)] border-[var(--border-color)]";
     const selectedClasses = "bg-[var(--accent-color)]/10 border-[var(--accent-color)] shadow-md";
@@ -37,10 +37,10 @@ const EditorCard: React.FC<{
             onClick={() => enabled && onSelect(type)}
             className={`${baseClasses} ${enabled ? (isSelected ? selectedClasses : enabledClasses) : disabledClasses}`}
         >
-            <div className={`text-[var(--accent-color)] mb-3 ${isSelected ? '' : 'text-[var(--text-color-light)]'}`}>{icon}</div>
-            <h3 className="font-bold text-lg">{name}</h3>
-            <p className="text-sm text-[var(--text-color-light)] mt-1 flex-grow">{description}</p>
-            {!enabled && <span className="text-xs text-yellow-400 font-semibold mt-3">{comingSoonText}</span>}
+            <div className={`text-[var(--accent-color)] mb-2 sm:mb-3 ${isSelected ? '' : 'text-[var(--text-color-light)]'}`}>{icon}</div>
+            <h3 className="font-bold text-base sm:text-lg">{name}</h3>
+            <p className="text-xs sm:text-sm text-[var(--text-color-light)] mt-1 flex-grow">{description}</p>
+            {!enabled && <span className="text-xs text-yellow-400 font-semibold mt-2 sm:mt-3">{comingSoonText}</span>}
         </div>
     );
 };
@@ -73,21 +73,21 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onClose, onCrea
     const buttonText = isQuickCreate ? t.create_project_start_button : t.create_project_button;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in" onClick={onClose}>
-            <div className="bg-[var(--panel-bg)] w-full max-w-4xl max-h-[90vh] flex flex-col rounded-2xl shadow-xl border border-[var(--border-color)] animate-fade-in-up" onClick={e => e.stopPropagation()}>
-                <div className="p-8 border-b border-[var(--border-color)] flex justify-between items-center flex-shrink-0">
-                    <h2 className="text-2xl font-bold text-[var(--text-color)]">{modalTitle}</h2>
-                    <button onClick={onClose} className="h-12 w-12 bg-transparent hover:bg-[var(--border-color)] active:scale-95 text-[var(--text-color)] flex items-center justify-center rounded-lg transition-colors" aria-label={t.create_project_close_aria}>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-7 h-7">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 animate-fade-in" onClick={onClose}>
+            <div className="bg-[var(--panel-bg)] w-full max-w-4xl max-h-[95vh] sm:max-h-[90vh] flex flex-col rounded-xl sm:rounded-2xl shadow-xl border border-[var(--border-color)] animate-fade-in-up" onClick={e => e.stopPropagation()}>
+                <div className="p-4 sm:p-6 md:p-8 border-b border-[var(--border-color)] flex justify-between items-center flex-shrink-0">
+                    <h2 className="text-xl sm:text-2xl font-bold text-[var(--text-color)] pr-2">{modalTitle}</h2>
+                    <button onClick={onClose} className="h-10 w-10 sm:h-12 sm:w-12 bg-transparent hover:bg-[var(--border-color)] active:scale-95 text-[var(--text-color)] flex items-center justify-center rounded-lg transition-colors flex-shrink-0" aria-label={t.create_project_close_aria}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M18 6 6 18" />
                           <path strokeLinecap="round" strokeLinejoin="round" d="m6 6 12 12" />
                         </svg>
                     </button>
                 </div>
                 
-                <div className="p-8 space-y-8 overflow-y-auto">
+                <div className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 md:space-y-8 overflow-y-auto">
                     {!isQuickCreate && (
-                        <div className="space-y-6 text-[var(--text-color)]">
+                        <div className="space-y-4 sm:space-y-6 text-[var(--text-color)]">
                             <div>
                                 <label htmlFor="projectName" className="block text-sm font-medium mb-2 text-[var(--text-color-light)]">{t.create_project_name_label}</label>
                                 <input
@@ -96,7 +96,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onClose, onCrea
                                     value={projectName}
                                     onChange={(e) => setProjectName(e.target.value)}
                                     placeholder={t.create_project_name_placeholder}
-                                    className="w-full bg-[var(--input-bg)] border border-[var(--border-color)] rounded-lg p-4 text-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]"
+                                    className="w-full bg-[var(--input-bg)] border border-[var(--border-color)] rounded-lg p-3 sm:p-4 text-sm sm:text-base md:text-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]"
                                 />
                             </div>
                             <div>
@@ -107,15 +107,14 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onClose, onCrea
                                     onChange={(e) => setProjectDescription(e.target.value)}
                                     placeholder={t.create_project_description_placeholder}
                                     rows={3}
-                                    className="w-full bg-[var(--input-bg)] border border-[var(--border-color)] rounded-lg p-4 text-lg resize-none focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]"
+                                    className="w-full bg-[var(--input-bg)] border border-[var(--border-color)] rounded-lg p-3 sm:p-4 text-sm sm:text-base md:text-lg resize-none focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]"
                                 />
                             </div>
                         </div>
                     )}
 
                     <div>
-                        <h3 className="text-lg font-medium text-[var(--text-color)] mb-4">{t.create_project_select_editor}</h3>
-                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
                             {EDITORS.map(editor => (
                                 <EditorCard 
                                     key={editor.type}
@@ -133,11 +132,11 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onClose, onCrea
                     </div>
                 </div>
 
-                <div className="p-6 border-t border-[var(--border-color)] mt-auto flex-shrink-0 flex justify-end">
+                <div className="p-4 sm:p-6 border-t border-[var(--border-color)] mt-auto flex-shrink-0 flex justify-end">
                      <button
                         onClick={handleCreateClick}
                         disabled={isButtonDisabled}
-                        className="bg-[var(--accent-color)] hover:bg-[var(--accent-color-hover)] text-white font-bold py-4 px-10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
+                        className="bg-[var(--accent-color)] hover:bg-[var(--accent-color-hover)] text-white font-bold py-2.5 sm:py-3 md:py-4 px-6 sm:px-8 md:px-10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 text-sm sm:text-base"
                     >
                         {buttonText}
                     </button>

@@ -17,33 +17,70 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-
+let app;
+try {
+    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+    console.log('Firebase app initialized');
+} catch (error) {
+    console.error('Firebase initialization error:', error);
+    throw error;
+}
 
 // Initialize Firebase Authentication and get a reference to the service
-const auth = getAuth(app);
+let auth;
+try {
+    auth = getAuth(app);
+    console.log('Firebase Auth initialized');
+} catch (error) {
+    console.error('Firebase Auth initialization error:', error);
+    throw error;
+}
 
 // Initialize Firestore
-const db = getFirestore(app);
+let db;
+try {
+    db = getFirestore(app);
+    console.log('Firestore initialized');
+} catch (error) {
+    console.error('Firestore initialization error:', error);
+    throw error;
+}
 
 // Initialize Storage
-const storage = getStorage(app);
+let storage;
+try {
+    storage = getStorage(app);
+    console.log('Firebase Storage initialized');
+} catch (error) {
+    console.error('Firebase Storage initialization error:', error);
+    throw error;
+}
 
-// Enable offline persistence
-enableIndexedDbPersistence(db)
-  .catch((err) => {
-    if (err.code == 'failed-precondition') {
-      // Multiple tabs open, persistence can only be enabled in one tab at a time.
-      console.warn("Firestore persistence failed: This can happen if you have multiple tabs of the app open. Offline mode will be disabled.");
-    } else if (err.code == 'unimplemented') {
-      // The current browser does not support all of the features required to enable persistence
-      console.warn("Firestore persistence is not supported in this browser. The app will not work offline.");
+// Enable offline persistence (only in browser environment)
+if (typeof window !== 'undefined') {
+    enableIndexedDbPersistence(db)
+        .catch((err) => {
+            if (err.code == 'failed-precondition') {
+                // Multiple tabs open, persistence can only be enabled in one tab at a time.
+                console.warn("Firestore persistence failed: This can happen if you have multiple tabs of the app open. Offline mode will be disabled.");
+            } else if (err.code == 'unimplemented') {
+                // The current browser does not support all of the features required to enable persistence
+                console.warn("Firestore persistence is not supported in this browser. The app will not work offline.");
+            } else {
+                console.warn("Firestore persistence error:", err);
+            }
+        });
+}
+
+
+// Initialize Analytics (only in browser environment)
+if (typeof window !== 'undefined') {
+    try {
+        getAnalytics(app);
+    } catch (error) {
+        console.warn('Firebase Analytics initialization failed:', error);
     }
-  });
-
-
-// Initialize Analytics
-getAnalytics(app);
+}
 
 // Export the auth instance to be used in other parts of the app
 export { auth, db, storage };

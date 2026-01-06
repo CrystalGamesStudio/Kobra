@@ -23,20 +23,20 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onOpenMenu }) => {
     return (
         <div
             onClick={(e) => onOpenMenu(project, e)}
-            className="bg-[var(--panel-bg)] p-6 flex flex-col cursor-pointer transition-all duration-200 group border border-[var(--border-color)] rounded-xl hover:shadow-lg hover:border-[var(--accent-color)]"
+            className="bg-[var(--panel-bg)] p-4 sm:p-5 md:p-6 flex flex-col cursor-pointer transition-all duration-200 group border border-[var(--border-color)] rounded-xl hover:shadow-lg hover:border-[var(--accent-color)]"
         >
-            <div className="flex items-center mb-4">
-                <div className="text-[var(--text-color-light)] group-hover:text-[var(--accent-color)] mr-4 flex-shrink-0 bg-[var(--bg-color)] h-14 w-14 flex items-center justify-center rounded-full transition-colors">
+            <div className="flex items-center mb-3 sm:mb-4">
+                <div className="text-[var(--text-color-light)] group-hover:text-[var(--accent-color)] mr-3 sm:mr-4 flex-shrink-0 bg-[var(--bg-color)] h-12 w-12 sm:h-14 sm:w-14 flex items-center justify-center rounded-full transition-colors">
                     {editorDetails?.icon}
                 </div>
-                <h3 className="text-lg font-bold text-[var(--text-color)] truncate group-hover:text-[var(--accent-color)] transition-colors" title={project.name}>
+                <h3 className="text-base sm:text-lg font-bold text-[var(--text-color)] truncate group-hover:text-[var(--accent-color)] transition-colors" title={project.name}>
                     {project.name}
                 </h3>
             </div>
-            <p className="text-sm text-[var(--text-color-light)] flex-grow mb-4 break-words line-clamp-2" title={descriptionText}>
+            <p className="text-xs sm:text-sm text-[var(--text-color-light)] flex-grow mb-3 sm:mb-4 break-words line-clamp-2" title={descriptionText}>
                 {descriptionText}
             </p>
-            <p className="text-xs text-[var(--text-color-light)] mt-auto pt-3 border-t border-[var(--border-color)]">{formattedDate}</p>
+            <p className="text-xs text-[var(--text-color-light)] mt-auto pt-2 sm:pt-3 border-t border-[var(--border-color)]">{formattedDate}</p>
         </div>
     );
 };

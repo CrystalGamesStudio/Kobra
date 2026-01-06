@@ -103,7 +103,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onStartStreamingClick, onNavigate, ac
     ];
 
     return (
-        <aside className={`bg-[var(--panel-bg)] rounded-xl shadow-sm border border-[var(--border-color)] flex flex-col flex-shrink-0 transition-all duration-300 ease-in-out p-3 ${isCollapsed ? 'w-24' : 'w-64'}`}>
+        <aside className={`bg-[var(--panel-bg)] rounded-xl shadow-sm border border-[var(--border-color)] flex flex-col flex-shrink-0 transition-all duration-300 ease-in-out p-3 h-full ${isCollapsed ? 'w-24' : 'w-64'}`}>
             <div className="p-1 flex items-center gap-2">
                 <button
                     onClick={() => setIsCollapsed(!isCollapsed)}

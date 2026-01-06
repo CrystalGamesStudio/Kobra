@@ -41,7 +41,11 @@ const ColorPickerButton: React.FC<{ color: string, onChange: (e: React.ChangeEve
 );
 
 
-const TextEditor: React.FC = () => {
+interface TextEditorProps {
+    onBack?: () => void;
+}
+
+const TextEditor: React.FC<TextEditorProps> = ({ onBack }) => {
     const { t, theme } = useSettings();
     const editorRef = useRef<HTMLDivElement>(null);
     const attachmentInputRef = useRef<HTMLInputElement>(null);

@@ -1,14 +1,25 @@
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 
-if (!process.env.API_KEY) {
-  console.warn("API_KEY environment variable not set. AI features will be disabled.");
+// Get API key from environment variable (set by Vite)
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY || process.env.API_KEY || process.env.GEMINI_API_KEY;
+
+if (!API_KEY) {
+  console.warn("Gemini API_KEY environment variable not set. AI features will be disabled.");
 }
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
+// Only create AI instance if API key is available
+let ai: GoogleGenAI | null = null;
+if (API_KEY) {
+    try {
+        ai = new GoogleGenAI({ apiKey: API_KEY });
+    } catch (error) {
+        console.error("Failed to initialize GoogleGenAI:", error);
+    }
+}
 
 const getAiResponse = async (prompt: string, history: { role: 'user' | 'model', parts: { text: string }[] }[]): Promise<string> => {
-    if (!process.env.API_KEY) {
-        return Promise.resolve("AI functionality is disabled because the API key is not configured. Please set the `process.env.API_KEY` environment variable.");
+    if (!API_KEY || !ai) {
+        return Promise.resolve("AI functionality is disabled because the API key is not configured. Please set the `VITE_GEMINI_API_KEY` environment variable in a `.env` file.");
     }
     try {
         const chat = ai.chats.create({

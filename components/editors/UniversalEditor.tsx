@@ -41,7 +41,11 @@ const ErrorIcon = () => (
 );
 
 
-const UniversalEditor: React.FC = () => {
+interface UniversalEditorProps {
+    onBack?: () => void;
+}
+
+const UniversalEditor: React.FC<UniversalEditorProps> = ({ onBack }) => {
     const { t } = useSettings();
     const videoRef = useRef<HTMLVideoElement>(null);
     const [stream, setStream] = useState<MediaStream | null>(null);

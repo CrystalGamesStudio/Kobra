@@ -15,6 +15,7 @@ import LoginPage from './components/LoginPage';
 import AuthLoading from './components/AuthLoading';
 import ProjectContextMenu from './components/ProjectContextMenu';
 import RenameProjectModal from './components/RenameProjectModal';
+import Notification from './components/Notification';
 import { onAuthStateChanged, signOutUser, User } from './services/authService';
 import { getProjects, createProject, deleteProject, updateProject } from './services/projectService';
 import { uploadRecording, saveRecordingMetadata } from './services/recordingService';
@@ -40,6 +41,7 @@ const App: React.FC = () => {
 
     const [isLive, setIsLive] = useState(false);
     const [mainView, setMainView] = useState<'dashboard' | 'chester' | 'settings' | 'projects' | 'explore'>('dashboard');
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     
     // Auth state
     const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -50,6 +52,12 @@ const App: React.FC = () => {
     const [contextMenuProject, setContextMenuProject] = useState<Project | null>(null);
     const [renameModalProject, setRenameModalProject] = useState<Project | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [notification, setNotification] = useState<{ 
+        message: string; 
+        type?: 'info' | 'warning' | 'success' | 'error';
+        actions?: Array<{ label: string; onClick: () => void; variant?: 'primary' | 'secondary' }>;
+    } | null>(null);
+    const [lastClosedProject, setLastClosedProject] = useState<Project | null>(null);
     
     // Recording Logic
     const handleStopRecordingCallback = useCallback(async (blob: Blob, duration: number) => {
@@ -187,6 +195,7 @@ const App: React.FC = () => {
         try {
             const newProject = await createProject(currentUser.uid, finalName, editorType, description);
             setActiveProject(newProject);
+            window.location.reload();
         } catch (error) {
             console.error("Failed to create project:", error);
         } finally {
@@ -264,6 +273,11 @@ const App: React.FC = () => {
 
 
     const handleEndStream = useCallback(() => {
+        const hadActiveStream = activeProject !== null;
+        const wasLive = isLive;
+        const wasRecording = isRecording;
+        const projectToSave = activeProject;
+        
         if (isRecording) {
             stopRecording();
         }
@@ -271,7 +285,48 @@ const App: React.FC = () => {
         setIsLive(false);
         setIsConfirmationModalOpen(false);
         setMainView('dashboard');
-    }, [isRecording, stopRecording]);
+        
+        // Show notification if there was an active stream
+        if (hadActiveStream && projectToSave) {
+            setLastClosedProject(projectToSave);
+            let message = '';
+            if (wasLive && wasRecording) {
+                message = t.notification_stream_ended_recording || 'Stream został zakończony. Nagrywanie zostało zatrzymane.';
+            } else if (wasLive) {
+                message = t.notification_stream_ended || 'Stream został zakończony.';
+            } else if (wasRecording) {
+                message = t.notification_recording_stopped || 'Nagrywanie zostało zatrzymane.';
+            } else {
+                message = t.notification_project_closed || 'Projekt został zamknięty. Możesz do niego wrócić z listy projektów.';
+            }
+            
+            setNotification({ 
+                message, 
+                type: 'error',
+                actions: [
+                    {
+                        label: t.notification_back_to_stream || 'Wróć do stream',
+                        onClick: () => {
+                            if (projectToSave) {
+                                setActiveProject(projectToSave);
+                                if (wasLive) {
+                                    setIsLive(true);
+                                }
+                            }
+                        },
+                        variant: 'primary'
+                    },
+                    {
+                        label: t.notification_close || 'Zamknij',
+                        onClick: () => {
+                            setLastClosedProject(null);
+                        },
+                        variant: 'secondary'
+                    }
+                ]
+            });
+        }
+    }, [isRecording, stopRecording, activeProject, isLive, t]);
     
     const handleStartLive = useCallback(() => {
         setIsLive(true);
@@ -313,7 +368,7 @@ const App: React.FC = () => {
 
     const renderMainView = () => {
         if (activeProject) {
-             return <StreamView editorType={activeProject.editorType} />;
+             return <StreamView editorType={activeProject.editorType} onBack={handleEndStream} />;
         }
         switch (mainView) {
             case 'chester':
@@ -350,21 +405,76 @@ const App: React.FC = () => {
 
     return (
         <>
-            <div className="h-screen w-screen p-5">
-                <div className="flex h-full w-full gap-4">
+            <div className="h-screen w-screen p-2 sm:p-3 md:p-5 overflow-hidden">
+                <div className="flex h-full w-full gap-2 sm:gap-3 md:gap-4">
                     {!activeProject && (
-                         <Sidebar 
-                            onStartStreamingClick={handleStartStreamingClick}
-                            onNavigate={handleNavigate}
-                            activeView={mainView}
-                            onContactClick={handleContactClick}
-                            onSettingsClick={handleSettingsClick}
-                            user={currentUser}
-                            onLogout={handleLogout}
-                        />
+                        <>
+                            {/* Desktop Sidebar */}
+                            <div className="hidden lg:block">
+                                <Sidebar 
+                                    onStartStreamingClick={handleStartStreamingClick}
+                                    onNavigate={handleNavigate}
+                                    activeView={mainView}
+                                    onContactClick={handleContactClick}
+                                    onSettingsClick={handleSettingsClick}
+                                    user={currentUser}
+                                    onLogout={handleLogout}
+                                />
+                            </div>
+                            
+                            {/* Mobile Menu Overlay */}
+                            {isMobileMenuOpen && (
+                                <div 
+                                    className="fixed inset-0 bg-black/50 z-50 lg:hidden"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                />
+                            )}
+                            
+                            {/* Mobile Sidebar */}
+                            <div className={`fixed left-0 top-0 h-full z-50 lg:hidden transition-transform duration-300 ${
+                                isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+                            }`}>
+                                <Sidebar 
+                                    onStartStreamingClick={() => {
+                                        handleStartStreamingClick();
+                                        setIsMobileMenuOpen(false);
+                                    }}
+                                    onNavigate={(view) => {
+                                        handleNavigate(view);
+                                        setIsMobileMenuOpen(false);
+                                    }}
+                                    activeView={mainView}
+                                    onContactClick={() => {
+                                        handleContactClick();
+                                        setIsMobileMenuOpen(false);
+                                    }}
+                                    onSettingsClick={() => {
+                                        handleSettingsClick();
+                                        setIsMobileMenuOpen(false);
+                                    }}
+                                    user={currentUser}
+                                    onLogout={handleLogout}
+                                />
+                            </div>
+                            
+                            {/* Mobile Menu Button */}
+                            <button
+                                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                                className="lg:hidden fixed top-4 left-4 z-40 bg-[var(--panel-bg)] border border-[var(--border-color)] h-12 w-12 flex items-center justify-center rounded-lg text-[var(--text-color)] hover:bg-[var(--border-color)] transition-colors"
+                                aria-label="Toggle menu"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    {isMobileMenuOpen ? (
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    ) : (
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                                    )}
+                                </svg>
+                            </button>
+                        </>
                     )}
-                    <div className="flex flex-1 flex-col gap-4 min-h-0">
-                        <main className="flex-1 overflow-y-auto p-8 bg-[var(--panel-bg)] rounded-xl shadow-sm border border-[var(--border-color)]">
+                    <div className="flex flex-1 flex-col gap-2 sm:gap-3 md:gap-4 min-h-0 w-full lg:ml-0 ml-0">
+                        <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 bg-[var(--panel-bg)] rounded-xl shadow-sm border border-[var(--border-color)]">
                             {renderMainView()}
                         </main>
                     </div>
@@ -412,6 +522,19 @@ const App: React.FC = () => {
                       <div className="box2"></div>
                       <div className="box3"></div>
                     </div>
+                </div>
+            )}
+            {notification && (
+                <div className="fixed bottom-4 right-4 z-50 animate-fade-in-up">
+                    <Notification
+                        message={notification.message}
+                        type={notification.type}
+                        onClose={() => {
+                            setNotification(null);
+                            setLastClosedProject(null);
+                        }}
+                        actions={notification.actions}
+                    />
                 </div>
             )}
         </>

@@ -28,12 +28,12 @@ const ProjectsView: React.FC<ProjectsViewProps> = ({ projects, onOpenProjectMenu
     const { t } = useSettings();
 
     return (
-        <div className="space-y-8 animate-fade-in text-[var(--text-color)]">
-            <div className="p-10 rounded-xl bg-[var(--accent-color)] text-white animate-fade-in-up">
-                <h1 className="text-4xl font-extrabold">{t.projects_banner_title}</h1>
-                <p className="mt-2 text-lg opacity-90">{t.projects_banner_subtitle}</p>
-                <div className="flex items-center space-x-4 mt-6">
-                    <button onClick={onCreateNewProjectClick} className="bg-white/20 text-white hover:bg-white/30 active:scale-95 font-bold py-3 px-8 rounded-lg flex items-center transition-colors">
+        <div className="space-y-4 sm:space-y-6 md:space-y-8 animate-fade-in text-[var(--text-color)]">
+            <div className="p-4 sm:p-6 md:p-10 rounded-xl bg-[var(--accent-color)] text-white animate-fade-in-up">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold">{t.projects_banner_title}</h1>
+                <p className="mt-2 text-sm sm:text-base md:text-lg opacity-90">{t.projects_banner_subtitle}</p>
+                <div className="flex items-center mt-4 sm:mt-6">
+                    <button onClick={onCreateNewProjectClick} className="bg-white/20 text-white hover:bg-white/30 active:scale-95 font-bold py-2.5 sm:py-3 px-4 sm:px-6 md:px-8 rounded-lg flex items-center transition-colors text-sm sm:text-base">
                         <PlusIcon />
                         {t.projects_create_new}
                     </button>
@@ -41,17 +41,17 @@ const ProjectsView: React.FC<ProjectsViewProps> = ({ projects, onOpenProjectMenu
             </div>
 
             {projects.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
                     {projects.map(project => (
                         <ProjectCard key={project.id} project={project} onOpenMenu={onOpenProjectMenu} />
                     ))}
                 </div>
             ) : (
-                <div className="text-center py-20 px-6 bg-[var(--panel-bg)] border border-[var(--border-color)] rounded-xl">
+                <div className="text-center py-10 sm:py-16 md:py-20 px-4 sm:px-6 bg-[var(--panel-bg)] border border-[var(--border-color)] rounded-xl">
                     <EmptyStateIcon />
-                    <h3 className="mt-4 text-xl font-medium">{t.dashboard_projects_empty}</h3>
-                    <p className="mt-1 text-[var(--text-color-light)]">{t.projects_empty_subtitle}</p>
-                    <button onClick={onCreateNewProjectClick} className="mt-6 bg-[var(--accent-color)] hover:bg-[var(--accent-color-hover)] active:scale-95 text-white font-bold py-3 px-6 rounded-lg flex items-center transition-colors mx-auto">
+                    <h3 className="mt-4 text-lg sm:text-xl font-medium">{t.dashboard_projects_empty}</h3>
+                    <p className="mt-1 text-sm sm:text-base text-[var(--text-color-light)]">{t.projects_empty_subtitle}</p>
+                    <button onClick={onCreateNewProjectClick} className="mt-4 sm:mt-6 bg-[var(--accent-color)] hover:bg-[var(--accent-color-hover)] active:scale-95 text-white font-bold py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg flex items-center transition-colors mx-auto text-sm sm:text-base">
                          <PlusIcon />
                         {t.dashboard_projects_create}
                     </button>

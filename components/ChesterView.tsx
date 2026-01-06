@@ -77,37 +77,37 @@ const ChesterView: React.FC = () => {
     
     return (
         <div className="bg-[var(--panel-bg)] border border-[var(--border-color)] h-full flex flex-col text-[var(--text-color)] rounded-xl">
-            <div className="p-5 border-b border-[var(--border-color)] flex items-center justify-between">
-                <div className="flex items-center">
-                    <img src="https://api.dicebear.com/8.x/bottts/svg?seed=Chester" alt="Chester" className="w-12 h-12 rounded-full mr-4 border-2 border-[var(--accent-color)] p-0.5"/>
-                    <div>
-                        <h3 className="font-bold text-lg">{t.chester_name}</h3>
-                        <p className="text-sm text-[var(--accent-color)]">{t.chester_subtitle_panel}</p>
+            <div className="p-3 sm:p-4 md:p-5 border-b border-[var(--border-color)] flex items-center justify-between">
+                <div className="flex items-center min-w-0 flex-1">
+                    <img src="https://api.dicebear.com/8.x/bottts/svg?seed=Chester" alt="Chester" className="w-10 h-10 sm:w-12 sm:h-12 rounded-full mr-3 sm:mr-4 border-2 border-[var(--accent-color)] p-0.5 flex-shrink-0"/>
+                    <div className="min-w-0">
+                        <h3 className="font-bold text-base sm:text-lg truncate">{t.chester_name}</h3>
+                        <p className="text-xs sm:text-sm text-[var(--accent-color)] truncate">{t.chester_subtitle_panel}</p>
                     </div>
                 </div>
                  {messages.length > 0 && (
-                    <button onClick={handleClearChat} className="bg-transparent hover:bg-[var(--border-color)] h-12 w-12 flex items-center justify-center rounded-lg text-[var(--text-color-light)] hover:text-red-500 active:scale-95 transition-colors" title={t.chester_clear_chat_button}>
+                    <button onClick={handleClearChat} className="bg-transparent hover:bg-[var(--border-color)] h-10 w-10 sm:h-12 sm:w-12 flex items-center justify-center rounded-lg text-[var(--text-color-light)] hover:text-red-500 active:scale-95 transition-colors flex-shrink-0 ml-2" title={t.chester_clear_chat_button}>
                         <ClearIcon />
                     </button>
                 )}
             </div>
 
-            <div className="flex-1 p-6 overflow-y-auto space-y-4">
+            <div className="flex-1 p-3 sm:p-4 md:p-6 overflow-y-auto space-y-3 sm:space-y-4">
                 {messages.length === 0 && (
-                    <div className="text-center text-[var(--text-color-light)] pt-10">{t.chester_prompt_placeholder}</div>
+                    <div className="text-center text-sm sm:text-base text-[var(--text-color-light)] pt-6 sm:pt-10 px-4">{t.chester_prompt_placeholder}</div>
                 )}
                 {messages.map((msg) => (
-                    <div key={msg.id} className={`flex items-start gap-4 animate-fade-in ${msg.sender === 'user' ? 'justify-end' : ''}`}>
-                        {msg.sender === 'ai' && <img src="https://api.dicebear.com/8.x/bottts/svg?seed=Chester" alt="Chester" className="w-10 h-10 rounded-full flex-shrink-0" />}
-                        <div className={`max-w-md lg:max-w-xl p-4 rounded-lg ${msg.sender === 'user' ? 'bg-[var(--accent-color)] text-white' : 'bg-[var(--bg-color)]'}`}>
-                           <p className="text-base whitespace-pre-wrap">{msg.text}</p>
+                    <div key={msg.id} className={`flex items-start gap-2 sm:gap-3 md:gap-4 animate-fade-in ${msg.sender === 'user' ? 'justify-end' : ''}`}>
+                        {msg.sender === 'ai' && <img src="https://api.dicebear.com/8.x/bottts/svg?seed=Chester" alt="Chester" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex-shrink-0" />}
+                        <div className={`max-w-[85%] sm:max-w-md lg:max-w-xl p-3 sm:p-4 rounded-lg ${msg.sender === 'user' ? 'bg-[var(--accent-color)] text-white' : 'bg-[var(--bg-color)]'}`}>
+                           <p className="text-sm sm:text-base whitespace-pre-wrap break-words">{msg.text}</p>
                         </div>
                     </div>
                 ))}
                  {isLoading && (
-                    <div className="flex items-start gap-4 animate-fade-in">
-                        <img src="https://api.dicebear.com/8.x/bottts/svg?seed=Chester" alt="Chester" className="w-10 h-10 rounded-full flex-shrink-0" />
-                        <div className="max-w-lg p-4 rounded-lg bg-[var(--bg-color)] flex items-center justify-center">
+                    <div className="flex items-start gap-2 sm:gap-3 md:gap-4 animate-fade-in">
+                        <img src="https://api.dicebear.com/8.x/bottts/svg?seed=Chester" alt="Chester" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex-shrink-0" />
+                        <div className="max-w-lg p-3 sm:p-4 rounded-lg bg-[var(--bg-color)] flex items-center justify-center">
                             <div className="loader chat-loader">
                               <div className="box1"></div>
                               <div className="box2"></div>
@@ -119,17 +119,17 @@ const ChesterView: React.FC = () => {
                 <div ref={messagesEndRef} />
             </div>
 
-            <div className="p-5 border-t border-[var(--border-color)]">
-                 <form onSubmit={handleSendMessage} className="flex items-center space-x-3">
+            <div className="p-3 sm:p-4 md:p-5 border-t border-[var(--border-color)]">
+                 <form onSubmit={handleSendMessage} className="flex items-center space-x-2 sm:space-x-3">
                     <input
                         type="text"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         placeholder={t.chester_input_placeholder}
                         disabled={isLoading}
-                        className="w-full bg-[var(--input-bg)] border border-[var(--border-color)] text-[var(--text-color)] rounded-lg p-4 text-lg transition focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]"
+                        className="w-full bg-[var(--input-bg)] border border-[var(--border-color)] text-[var(--text-color)] rounded-lg p-3 sm:p-4 text-sm sm:text-base md:text-lg transition focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]"
                     />
-                    <button type="submit" disabled={isLoading || !input.trim()} className="bg-[var(--accent-color)] hover:bg-[var(--accent-color-hover)] text-white rounded-lg p-3 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 flex-shrink-0 h-14 w-14 flex items-center justify-center transition-colors">
+                    <button type="submit" disabled={isLoading || !input.trim()} className="bg-[var(--accent-color)] hover:bg-[var(--accent-color-hover)] text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 flex-shrink-0 h-12 w-12 sm:h-14 sm:w-14 flex items-center justify-center transition-colors">
                          <SendIcon />
                     </button>
                 </form>

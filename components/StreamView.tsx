@@ -8,21 +8,22 @@ import { useSettings } from '../contexts/SettingsContext';
 
 interface StreamViewProps {
     editorType: EditorType;
+    onBack?: () => void;
 }
 
-const StreamView: React.FC<StreamViewProps> = ({ editorType }) => {
+const StreamView: React.FC<StreamViewProps> = ({ editorType, onBack }) => {
     const { t } = useSettings();
 
     const renderEditor = (editorType: EditorType) => {
         switch (editorType) {
             case EditorType.Code:
-                return <CodeEditor />;
+                return <CodeEditor onBack={onBack} />;
             case EditorType.AI:
-                return <AiChatEditor />;
+                return <AiChatEditor onBack={onBack} />;
             case EditorType.Text:
-                return <TextEditor />;
+                return <TextEditor onBack={onBack} />;
             case EditorType.Universal:
-                return <UniversalEditor />;
+                return <UniversalEditor onBack={onBack} />;
             default:
                 return <div className="h-full bg-[var(--panel-bg)] rounded-lg flex items-center justify-center text-[var(--text-color-light)]">{t.editor_coming_soon_long}</div>;
         }

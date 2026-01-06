@@ -20,7 +20,11 @@ const ClearIcon = () => (
     </svg>
 );
 
-const AiChatEditor: React.FC = () => {
+interface AiChatEditorProps {
+    onBack?: () => void;
+}
+
+const AiChatEditor: React.FC<AiChatEditorProps> = ({ onBack }) => {
     const { t } = useSettings();
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState('');

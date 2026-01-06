@@ -249,6 +249,14 @@ const en = {
   whats_new_tag_update: 'Update',
   
   landing_footer_rights: "All rights reserved.",
+  
+  // Notifications
+  notification_stream_ended: 'Stream has been ended.',
+  notification_stream_ended_recording: 'Stream has been ended. Recording has been stopped.',
+  notification_recording_stopped: 'Recording has been stopped.',
+  notification_project_closed: 'Project has been closed. You can return to it from the projects list.',
+  notification_back_to_stream: 'Back to stream',
+  notification_close: 'Close',
 };
 
 const pl = {
@@ -314,6 +322,12 @@ const pl = {
     login_page_to_sign_up_link: 'Zarejestruj się',
     'auth/invalid-credential': 'Nieprawidłowe dane. Sprawdź e-mail i hasło.',
     'auth/email-already-in-use': 'Konto z tym adresem e-mail już istnieje.',
+  notification_stream_ended: 'Stream został zakończony.',
+  notification_stream_ended_recording: 'Stream został zakończony. Nagrywanie zostało zatrzymane.',
+  notification_recording_stopped: 'Nagrywanie zostało zatrzymane.',
+  notification_project_closed: 'Projekt został zamknięty. Możesz do niego wrócić z listy projektów.',
+  notification_back_to_stream: 'Wróć do stream',
+  notification_close: 'Zamknij',
 };
 
 
