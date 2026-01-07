@@ -474,7 +474,7 @@ const App: React.FC = () => {
                         </>
                     )}
                     <div className="flex flex-1 flex-col gap-2 sm:gap-3 md:gap-4 min-h-0 w-full lg:ml-0 ml-0">
-                        {activeProject ? (
+                        {activeProject || mainView === 'chester' ? (
                             <div className="flex-1 min-h-0">
                                 {renderMainView()}
                             </div>
